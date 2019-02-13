@@ -1,0 +1,29 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --time=03:00:00
+#SBATCH --mem=10G
+#SBATCH -C intel18
+#SBATCH -J KER_Antioxidant_Trial
+#SBATCH -o KER_Antioxidant_Trial.o%j
+
+#=====================================================================
+# This script runs: KER_Antioxidant_Trial.R
+# Submited on: Wed Feb 13 14:26:22 EST 2019
+#=====================================================================
+
+# Work Directory
+cd /mnt/research/NMDL/KER_Antioxidant_Trial
+
+# Run R Code
+R -e 'library("knitr");knitr::spin ("KER_Antioxidant_Trial.R")'
+
+# Add metadata to md file
+cat .metadata KER_Antioxidant_Trial.md > tmp; mv tmp KER_Antioxidant_Trial.md
+
+# Render HTML
+R -e 'library("prettydoc");rmarkdown::render ("KER_Antioxidant_Trial.md")'
+
+# Job Details
+echo Job Details
+scontrol show job $SLURM_JOB_ID
